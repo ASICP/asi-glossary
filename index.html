@@ -4732,7 +4732,7 @@
             "term_frequency": {
                 "Reinforcement Learning from Human Feedback (RLHF)": 4007,
                 "Chain of Thought": 3834,
-                "Reward model": 3604,
+                "Reward Model": 3604,
                 "Supervised Fine-Tuning": 3412,
                 "Alignment Tax": 2902,
                 "Human Evaluation": 2466,
@@ -4868,9 +4868,10 @@
         }
 
         function searchForTerm(termLabel) {
+            const searchTerm = termLabel.toLowerCase();
             const summaries = document.querySelectorAll('summary');
             for (let summary of summaries) {
-                if (summary.innerText.trim().includes(termLabel)) {
+                if (summary.innerText.trim().toLowerCase().includes(searchTerm)) {
                     const parentCat = summary.closest('.category-details');
                     if (parentCat) parentCat.open = true;
                     const termDetails = summary.parentElement;
@@ -4881,7 +4882,6 @@
                     return;
                 }
             }
-            window.open('https://hubt1.asi2.org/static/login.html', '_blank');
         }
 
         // Search Functionality
