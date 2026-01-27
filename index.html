@@ -4794,6 +4794,10 @@
                                     boxWidth: 12,
                                     font: { size: 10 },
                                     color: colors.textColor
+                                },
+                                onClick: (event, legendItem, legend) => {
+                                    const termLabel = legendItem.text;
+                                    searchForTerm(termLabel);
                                 }
                             }
                         }
