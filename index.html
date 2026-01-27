@@ -649,6 +649,11 @@
                     </div>
                 </div>
 
+                <div class="trending-terms-list" style="text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--border-light);">
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;">Click a term to jump to its definition:</p>
+                    <div id="trending-links" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;"></div>
+                </div>
+
                 <div class="dashboard-footer">
                     <p>Data aggregated from Google Scholar, arXiv, and CrossRef. Interactive visualization powered by Chart.js.</p>
                     <a href="https://hubt1.asi2.org/static/login.html" target="_blank" class="cta-button">
@@ -4873,15 +4878,14 @@
 
         function searchForTerm(termLabel) {
             const searchTerm = termLabel.toLowerCase();
-            const summaries = document.querySelectorAll('summary');
-            for (let summary of summaries) {
-                if (summary.innerText.trim().toLowerCase().includes(searchTerm)) {
-                    const parentCat = summary.closest('.category-details');
+            const termDetails = document.querySelectorAll('.term-details');
+            for (let detail of termDetails) {
+                const summary = detail.querySelector('summary');
+                const summaryText = summary ? summary.innerText.trim().toLowerCase() : '';
+                if (summary && summaryText.includes(searchTerm)) {
+                    const parentCat = detail.closest('.category-details');
                     if (parentCat) parentCat.open = true;
-                    const termDetails = summary.parentElement;
-                    if (termDetails && termDetails.tagName === 'DETAILS') {
-                        termDetails.open = true;
-                    }
+                    detail.open = true;
                     summary.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return;
                 }
@@ -4936,10 +4940,30 @@
         }
 
         // Initialize on load
+        function initTrendingLinks() {
+            const container = document.getElementById('trending-links');
+            if (container) {
+                Object.keys(analyticsData.term_frequency).forEach(term => {
+                    const link = document.createElement('a');
+                    link.href = '#';
+                    link.textContent = term;
+                    link.style.cssText = 'display: inline-block; padding: 6px 12px; background: var(--accent-color); color: #fff; text-decoration: none; border-radius: 15px; font-size: 0.85rem; transition: all 0.2s;';
+                    link.addEventListener('mouseenter', () => { link.style.opacity = '0.8'; });
+                    link.addEventListener('mouseleave', () => { link.style.opacity = '1'; });
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        searchForTerm(term);
+                    });
+                    container.appendChild(link);
+                });
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             initTheme();
             initCharts();
             initSearch();
+            initTrendingLinks();
         });
     </script>
 </body>
